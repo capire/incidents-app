@@ -1,0 +1,61 @@
+@host = http://localhost:4004
+
+#####
+#
+# ProcessorService — local semantic search (@cap-js/ai)
+#
+# searchIncidents(phrase) ranks incidents by cosine similarity between the phrase and
+# each incident's stored embedding (title + conversation messages), computed locally
+# via an ONNX model on SQLite — no SAP AI Core needed.
+#
+
+### Search by phrase — inverter incidents should rank highest
+GET {{host}}/odata/v4/processor/searchIncidents(phrase='inverter%20problem')
+Authorization: Basic alice:wonderland
+
+### Search by conversation-only wording (not in any title) — proves messages are embedded
+GET {{host}}/odata/v4/processor/searchIncidents(phrase='loose%20battery%20connections')
+Authorization: Basic alice:wonderland
+
+### Unrelated phrase — expect low relevance across the board
+GET {{host}}/odata/v4/processor/searchIncidents(phrase='holiday%20booking%20refund')
+Authorization: Basic alice:wonderland
+
+#####
+#
+# Live edit → embedding recompute
+#
+# Adding a conversation message rebuilds `summary` (title + messages) in one roundtrip,
+# and the stored calculated `embedding` is recomputed automatically by the database.
+#
+
+@incident = 3a4ede72-244a-4f5f-8efa-b17e032d01ee
+
+### Baseline: this incident is only a weak match for "battery pack dead"
+GET {{host}}/odata/v4/processor/searchIncidents(phrase='dead%20battery%20pack')
+Authorization: Basic alice:wonderland
+
+### 1) Put the incident into draft edit
+POST {{host}}/odata/v4/processor/Incidents(ID={{incident}},IsActiveEntity=true)/ProcessorService.draftEdit
+Authorization: Basic alice:wonderland
+Content-Type: application/json
+
+{ "PreserveChanges": true }
+
+### 2) Add a conversation message mentioning the battery pack
+POST {{host}}/odata/v4/processor/Incidents(ID={{incident}},IsActiveEntity=false)/conversation
+Authorization: Basic alice:wonderland
+Content-Type: application/json
+
+{ "message": "The battery pack seems completely dead" }
+
+### 3) Activate the draft — triggers summarize() and re-embeds
+POST {{host}}/odata/v4/processor/Incidents(ID={{incident}},IsActiveEntity=false)/ProcessorService.draftActivate
+Authorization: Basic alice:wonderland
+Content-Type: application/json
+
+{}
+
+### 4) Re-run the search — this incident should now rank #1
+GET {{host}}/odata/v4/processor/searchIncidents(phrase='dead%20battery%20pack')
+Authorization: Basic alice:wonderland
