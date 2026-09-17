@@ -27,11 +27,7 @@
   "cds": {
     "requires": {
       "db": {
-        "kind": "sqlite",
-        "credentials": { "url": ":memory:" },
-        "embedding": {
-          "model": "sentence-transformers/all-MiniLM-L6-v2"
-        }
+        "kind": "sqlite:memory"
       }
     }
   },

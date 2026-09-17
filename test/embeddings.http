@@ -59,3 +59,36 @@ Content-Type: application/json
 ### 4) Re-run the search — this incident should now rank #1
 GET {{host}}/odata/v4/processor/searchIncidents(phrase='dead%20battery%20pack')
 Authorization: Basic alice:wonderland
+
+#####
+#
+# Multilingual limitation — Japanese phrases
+#
+# The default model (sentence-transformers/all-MiniLM-L6-v2) is English-only, so
+# non-English phrases produce near-zero, essentially random relevance and wrong
+# rankings — the same query in English matches cleanly (~0.6), the Japanese one
+# collapses to noise (~0.0 and even negative), often ranking the wrong incident first.
+#
+# To match at all, switch to a multilingual model in package.json:
+#   cds.requires.db.embedding.model = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+# (also 384 dims, so Vector(384) is unchanged), then download it and re-embed:
+#   npx @cap-js/ai install-model sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+#   cds watch   # in-memory redeploy re-runs the backfill and re-computes the stored embeddings
+#
+# With the multilingual model the *ranking* becomes sane, but absolute scores stay
+# modest (~0.14, vs ~0.6 for native English) — the incidents are stored in English, so
+# a Japanese query is a cross-lingual match, which is inherently weaker. Takeaway: pick a
+# relevance threshold per model/language pair; the ~0.5 that works for English won't transfer.
+#
+
+### インバーターの問題  ("inverter problem") — English scores ~0.62; here it's noise
+GET {{host}}/odata/v4/processor/searchIncidents(phrase='インバーターの問題')
+Authorization: Basic alice:wonderland
+
+### バッテリーの接続が緩い  ("loose battery connections") — near-zero / negative across the board
+GET {{host}}/odata/v4/processor/searchIncidents(phrase='バッテリーの接続が緩い')
+Authorization: Basic alice:wonderland
+
+### ソーラーパネルが壊れた  ("solar panel broken") — best match barely above noise (~0.06)
+GET {{host}}/odata/v4/processor/searchIncidents(phrase='ソーラーパネルが壊れた')
+Authorization: Basic alice:wonderland

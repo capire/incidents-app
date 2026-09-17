@@ -1,7 +1,23 @@
 const cds = require('@sap/cds')
+const fs = require('node:fs')
 
 describe('Semantic search over incidents (@cap-js/ai embeddings)', () => {
-  const { GET, POST, expect, axios } = cds.test(__dirname + '/..')
+
+  // The embeddings example is opt-in: activate it the way a user would, by uncommenting
+  // its line in the srv/xmpls.cds switchboard. Registered before cds.test() so it runs
+  // before the server boots (same ordering the copy()-based xmpl tests rely on).
+  const { path } = cds.utils; cds.root = path.resolve(__dirname, '..')
+  const SWITCH = path.resolve(cds.root, 'srv/xmpls.cds')
+  let saved
+  beforeAll(() => {
+    saved = fs.readFileSync(SWITCH, 'utf8')
+    const active = saved.replace(/\/\/\s*(using from '\.\.\/xmpls\/embeddings';)/, '$1')
+    if (active === saved) throw new Error('embeddings using-line not found in srv/xmpls.cds')
+    fs.writeFileSync(SWITCH, active)
+  })
+  afterAll(() => fs.writeFileSync(SWITCH, saved))
+
+  const { GET, POST, expect, axios } = cds.test()
   axios.defaults.auth = { username: 'alice' }
 
   const Incidents = '/odata/v4/processor/Incidents'

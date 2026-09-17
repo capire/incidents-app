@@ -1,9 +1,5 @@
-ID,customer_ID,title,urgency_code,status_code,summary
-3b23bb4b-4ac7-4a24-ac02-aa10cabd842c,1004155,Inverter not functional,H,C,"Inverter not functional
-Can you please check if battery connections are fine?"
-3a4ede72-244a-4f5f-8efa-b17e032d01ee,1004161,No current on a sunny day,H,N,"No current on a sunny day
-Can you please check if there are any loose connections?"
-3ccf474c-3881-44b7-99fb-59a2a4668418,1004161,Strange noise when switching off Inverter,M,N,"Strange noise when switching off Inverter
-What exactly is wrong?"
-3583f982-d7df-4aad-ab26-301d4a157cd7,1004100,Solar panel broken,H,I,"Solar panel broken
-Please check why the solar panel is broken"
+ID,customer_ID,title,urgency_code,status_code
+3b23bb4b-4ac7-4a24-ac02-aa10cabd842c,1004155,Inverter not functional,H,C
+3a4ede72-244a-4f5f-8efa-b17e032d01ee,1004161,No current on a sunny day,H,N
+3ccf474c-3881-44b7-99fb-59a2a4668418,1004161,Strange noise when switching off Inverter,M,N
+3583f982-d7df-4aad-ab26-301d4a157cd7,1004100,Solar panel broken,H,I

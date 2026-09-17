@@ -49,6 +49,24 @@ npm add @cap-js/audit-logging
 cp xmpls/data-privacy.cds ./srv
 ```
 
+## Semantic Search
+
+Local similarity search over incidents (title + conversation) via `@cap-js/ai`'s ONNX
+embeddings — runs fully offline on SQLite, no SAP AI Core needed. Install the dependencies,
+then activate by uncommenting the `embeddings` line in `srv/xmpls.cds`:
+
+```sh
+npm add @cap-js/ai @huggingface/hub@^2.15.0 @huggingface/tokenizers@0.1.3 onnxruntime-node@1.20.1
+```
+
+```cds
+// srv/xmpls.cds
+using from '../xmpls/embeddings';   // uncomment this line
+```
+
+The first `cds watch` downloads the embedding model (~90 MB) into `.cds/models`. Then call
+`GET /odata/v4/processor/searchIncidents(phrase='inverter problem')`. See `test/embeddings.http`.
+
 # Other Examples
 
 ## Remote Service Consumption
