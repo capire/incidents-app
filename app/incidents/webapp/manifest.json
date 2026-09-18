@@ -129,6 +129,14 @@
                                 "@com.sap.vocabularies.UI.v1.LineItem": {
                                     "tableSettings": {
                                         "type": "ResponsiveTable"
+                                    },
+                                    "actions": {
+                                        "SemanticSearch": {
+                                            "press": "ns.incidents.ext.SemanticSearch.onSearchByMeaning",
+                                            "text": "{i18n>SearchByMeaning}",
+                                            "enabled": true,
+                                            "visible": "{features>/semanticSearch}"
+                                        }
                                     }
                                 }
                             }
