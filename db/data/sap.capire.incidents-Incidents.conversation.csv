@@ -1,5 +1,19 @@
 ID,up__ID,timestamp,author,message
-2b23bb4b-4ac7-4a24-ac02-aa10cabd842c,3b23bb4b-4ac7-4a24-ac02-aa10cabd842c,1995-12-17T03:24:00Z,Harry John,Can you please check if battery connections are fine?
+2b23bb4b-4ac7-4a24-ac02-aa10cabd8421,3b23bb4b-4ac7-4a24-ac02-aa10cabd842c,1995-12-17T03:22:00Z,Harry John,The inverter stopped working completely and there is no power output at all.
+2b23bb4b-4ac7-4a24-ac02-aa10cabd842c,3b23bb4b-4ac7-4a24-ac02-aa10cabd842c,1995-12-17T03:24:00Z,Emily Elizabeth,Can you please check if battery connections are fine?
+2b23bb4b-4ac7-4a24-ac02-aa10cabd8423,3b23bb4b-4ac7-4a24-ac02-aa10cabd842c,1995-12-17T03:26:00Z,Harry John,The connections look fine but the inverter display stays dark and unresponsive.
+2b23bb4b-4ac7-4a24-ac02-aa10cabd8424,3b23bb4b-4ac7-4a24-ac02-aa10cabd842c,1995-12-17T03:28:00Z,Emily Elizabeth,It sounds like the inverter unit itself has failed. We will arrange a replacement inverter.
+2b23bb4b-4ac7-4a24-ac02-aa10cabd8425,3b23bb4b-4ac7-4a24-ac02-aa10cabd842c,1995-12-17T03:30:00Z,Harry John,The new inverter is installed and power output is back to normal. Thank you!
+2b23bb4b-4ac7-4a24-ac02-aa10cabd8431,3a4ede72-244a-4f5f-8efa-b17e032d01ee,1995-12-18T04:22:00Z,Harry John,It is a bright sunny day but the system delivers no current at all.
 2b23bb4b-4ac7-4a24-ac02-aa10cabd843c,3a4ede72-244a-4f5f-8efa-b17e032d01ee,1995-12-18T04:24:00Z,Emily Elizabeth,Can you please check if there are any loose connections?
+2b23bb4b-4ac7-4a24-ac02-aa10cabd8433,3a4ede72-244a-4f5f-8efa-b17e032d01ee,1995-12-18T04:26:00Z,Harry John,A battery terminal and one wiring connector both looked loose near the junction box.
+2b23bb4b-4ac7-4a24-ac02-aa10cabd8434,3a4ede72-244a-4f5f-8efa-b17e032d01ee,1995-12-18T04:28:00Z,Emily Elizabeth,Please tighten the loose connections and measure the current again.
+2b23bb4b-4ac7-4a24-ac02-aa10cabd8435,3a4ede72-244a-4f5f-8efa-b17e032d01ee,1995-12-18T04:30:00Z,Harry John,After tightening the loose connections the current is flowing again.
+9583f982-d7df-4aad-ab26-301d4a157cd1,3583f982-d7df-4aad-ab26-301d4a157cd7,2022-09-04T11:58:00Z,Sunny Sunshine,One of the solar panels is broken and there is a visible crack across the glass.
 9583f982-d7df-4aad-ab26-301d4a157cd7,3583f982-d7df-4aad-ab26-301d4a157cd7,2022-09-04T12:00:00Z,Sunny Sunshine,Please check why the solar panel is broken
+9583f982-d7df-4aad-ab26-301d4a157cd3,3583f982-d7df-4aad-ab26-301d4a157cd7,2022-09-04T12:02:00Z,Bradley Flowers,The cracked solar panel now produces almost no power.
+9583f982-d7df-4aad-ab26-301d4a157cd4,3583f982-d7df-4aad-ab26-301d4a157cd7,2022-09-04T12:04:00Z,Bradley Flowers,A broken solar panel cannot be repaired, so we will schedule a replacement panel.
+9583f982-d7df-4aad-ab26-301d4a158cd1,3ccf474c-3881-44b7-99fb-59a2a4668418,2022-09-04T12:58:00Z,Sunny Sunshine,There is a strange buzzing noise every time I switch off the inverter.
 9583f982-d7df-4aad-ab26-301d4a158cd7,3ccf474c-3881-44b7-99fb-59a2a4668418,2022-09-04T13:00:00Z,Bradley Flowers,What exactly is wrong?
+9583f982-d7df-4aad-ab26-301d4a158cd3,3ccf474c-3881-44b7-99fb-59a2a4668418,2022-09-04T13:02:00Z,Sunny Sunshine,It is a loud humming and clicking sound coming from the inverter housing.
+9583f982-d7df-4aad-ab26-301d4a158cd4,3ccf474c-3881-44b7-99fb-59a2a4668418,2022-09-04T13:04:00Z,Bradley Flowers,That clicking is likely the relay inside the inverter, we will inspect the unit.

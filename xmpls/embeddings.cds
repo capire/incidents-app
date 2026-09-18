@@ -6,14 +6,11 @@ using { ProcessorService } from '../srv/processor-service';
 // so the AI feature is opt-in — activate it via srv/xmpls.cds (see xmpls/README.md).
 
 extend my.Incidents with {
-  // Text to embed (title + all conversation messages), maintained by the handler in
-  // embeddings.js. The embedding is a stored calculated element: the database recomputes
-  // it automatically whenever `summary` changes. @cds.api.ignore keeps both out of the
-  // OData API. The model name is ignored on SQLite and honored on SAP HANA.
-  @cds.api.ignore summary   : String;
-  @cds.api.ignore embedding : Vector = vector_embedding( // dimension follows the model:
-    summary, 'DOCUMENT', 'SAP_GXY.20250407'                // 384 (all-MiniLM) / 768 (HANA)
-  ) stored;
+  // Text to embed (title + all conversation messages), maintained by the handler in embeddings.js.
+  summary   : String;
+  // The embedding is a stored calculated element: the database recomputes it automatically whenever `summary` changes.
+  // The model name is ignored on SQLite and honored on SAP HANA.
+  embedding : Vector = vector_embedding(summary, 'DOCUMENT', 'SAP_GXY.20250407') stored;
 }
 
 extend service ProcessorService with {
@@ -28,3 +25,7 @@ extend service ProcessorService with {
 // Redirect ProcessorService's implementation to the subclass that adds the AI handlers
 // (it delegates to the base handlers via super.init()).
 annotate ProcessorService with @impl: 'xmpls/embeddings.js';
+
+// @cds.api.ignore keeps both out of the OData API.
+annotate my.Incidents:summary with @cds.api.ignore;
+annotate my.Incidents:embedding with @cds.api.ignore;
