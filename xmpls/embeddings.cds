@@ -11,8 +11,8 @@ extend my.Incidents with {
   // it automatically whenever `summary` changes. @cds.api.ignore keeps both out of the
   // OData API. The model name is ignored on SQLite and honored on SAP HANA.
   @cds.api.ignore summary   : String;
-  @cds.api.ignore embedding : Vector(384) = vector_embedding( // dim of all-MiniLM-L6-v2
-    summary, 'DOCUMENT', 'SAP_GXY.20250407'
+  @cds.api.ignore embedding : Vector = vector_embedding( // dimension follows the model:
+    summary, 'DOCUMENT', 'SAP_GXY.20250407'                // 384 (all-MiniLM) / 768 (HANA)
   ) stored;
 }
 

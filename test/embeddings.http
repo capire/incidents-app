@@ -71,7 +71,7 @@ Authorization: Basic alice:wonderland
 #
 # To match at all, switch to a multilingual model in package.json:
 #   cds.requires.db.embedding.model = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
-# (also 384 dims, so Vector(384) is unchanged), then download it and re-embed:
+# (the Vector element has no fixed dimension, so the model needs no change), then re-embed:
 #   npx @cap-js/ai install-model sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
 #   cds watch   # in-memory redeploy re-runs the backfill and re-computes the stored embeddings
 #
