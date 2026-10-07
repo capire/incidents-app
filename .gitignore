@@ -9,6 +9,7 @@ node_modules/
 target/
 dist/
 @cds-models/
+.cds/models/
 
 # NPM
 .npmrc

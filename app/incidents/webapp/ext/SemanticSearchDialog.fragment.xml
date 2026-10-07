@@ -1,0 +1,48 @@
+<core:FragmentDefinition
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core">
+  <Dialog
+    id="semanticSearchDialog"
+    title="{i18n>SearchDialogTitle}"
+    contentWidth="520px"
+    contentHeight="440px"
+    resizable="true"
+    draggable="true">
+    <content>
+      <VBox class="sapUiSmallMargin">
+        <SearchField
+          id="semanticSearchField"
+          placeholder="{i18n>SearchPlaceholder}"
+          search=".onSearchExecute"
+          width="100%" />
+        <Table
+          id="semanticSearchResults"
+          items="{search>/results}"
+          noDataText="{i18n>SearchNoData}"
+          growing="true"
+          growingThreshold="10"
+          class="sapUiSmallMarginTop">
+          <columns>
+            <Column width="6rem" hAlign="End">
+              <Text text="{i18n>SearchColRelevance}" />
+            </Column>
+            <Column>
+              <Text text="{i18n>SearchColTitle}" />
+            </Column>
+          </columns>
+          <items>
+            <ColumnListItem type="Navigation" press=".onResultPress">
+              <cells>
+                <ObjectNumber number="{ path: 'search>relevance', formatter: '.formatRelevance' }" emphasized="true" />
+                <Text text="{search>title}" />
+              </cells>
+            </ColumnListItem>
+          </items>
+        </Table>
+      </VBox>
+    </content>
+    <beginButton>
+      <Button text="{i18n>SearchClose}" press=".onCloseSearch" />
+    </beginButton>
+  </Dialog>
+</core:FragmentDefinition>

@@ -1,0 +1,95 @@
+@host = http://localhost:4004
+
+#####
+#
+# ProcessorService — local semantic search (@cap-js/ai)
+#
+# searchIncidents(phrase) ranks incidents by cosine similarity between the phrase and
+# each incident's stored embedding (title + conversation messages), computed locally
+# via an ONNX model on SQLite — no SAP AI Core needed.
+#
+
+### Search by phrase — inverter incidents should rank highest
+GET {{host}}/odata/v4/processor/searchIncidents(phrase='inverter%20problem')
+Authorization: Basic alice:wonderland
+
+### Search by conversation-only wording (not in any title) — proves messages are embedded
+GET {{host}}/odata/v4/processor/searchIncidents(phrase='loose%20battery%20connections')
+Authorization: Basic alice:wonderland
+
+### Unrelated phrase — expect low relevance across the board
+GET {{host}}/odata/v4/processor/searchIncidents(phrase='holiday%20booking%20refund')
+Authorization: Basic alice:wonderland
+
+#####
+#
+# Multilingual — Japanese phrases (swap the embedding model)
+#
+# The default model (sentence-transformers/all-MiniLM-L6-v2) is English-only, so Japanese
+# phrases collapse to noise: "solar panel broken" tops out at ~0.06 and "loose battery
+# connections" even goes negative — the model has no real representation for these tokens.
+#
+# Fix = swap to a multilingual model. No code change (the Vector element has no fixed
+# dimension). For the demo an env override is easiest:
+#   CDS_REQUIRES_DB_EMBEDDING_MODEL=sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2 cds watch
+# or set it permanently: cds.requires.db.embedding.model in package.json.
+# First time only, download the model:
+#   npx @cap-js/ai install-model sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+# An in-memory redeploy re-runs the backfill and re-computes every stored embedding.
+#
+# With the multilingual model Japanese works: "solar panel broken" jumps from ~0.06 to
+# ~0.76 — a clean #1, on par with native English. Cross-lingual scores read a little lower
+# than same-language, so calibrate the relevance threshold per language. One phrasing stays
+# hard even here — the katakana "インバーターの問題" — a model/tokenization limit, not a data one.
+#
+
+### ソーラーパネルが壊れた  ("solar panel broken") — English model ~0.06 (noise) → multilingual ~0.76
+GET {{host}}/odata/v4/processor/searchIncidents(phrase='ソーラーパネルが壊れた')
+Authorization: Basic alice:wonderland
+
+### バッテリーの接続が緩い  ("loose battery connections") — negative on the English model; ranks the right topic on multilingual
+GET {{host}}/odata/v4/processor/searchIncidents(phrase='バッテリーの接続が緩い')
+Authorization: Basic alice:wonderland
+
+### インバーターの問題  ("inverter problem") — the hard case: near-noise even on the multilingual model
+GET {{host}}/odata/v4/processor/searchIncidents(phrase='インバーターの問題')
+Authorization: Basic alice:wonderland
+
+#####
+#
+# Live edit → embedding recompute
+#
+# Adding a conversation message rebuilds `summary` (title + messages) in one roundtrip,
+# and the stored calculated `embedding` is recomputed automatically by the database.
+#
+
+@incident = 3a4ede72-244a-4f5f-8efa-b17e032d01ee
+
+### Baseline: this incident is only a weak match for "battery pack dead"
+GET {{host}}/odata/v4/processor/searchIncidents(phrase='dead%20battery%20pack')
+Authorization: Basic alice:wonderland
+
+### 1) Put the incident into draft edit
+POST {{host}}/odata/v4/processor/Incidents(ID={{incident}},IsActiveEntity=true)/ProcessorService.draftEdit
+Authorization: Basic alice:wonderland
+Content-Type: application/json
+
+{ "PreserveChanges": true }
+
+### 2) Add a conversation message mentioning the battery pack
+POST {{host}}/odata/v4/processor/Incidents(ID={{incident}},IsActiveEntity=false)/conversation
+Authorization: Basic alice:wonderland
+Content-Type: application/json
+
+{ "message": "The battery pack seems completely dead" }
+
+### 3) Activate the draft — triggers summarize() and re-embeds
+POST {{host}}/odata/v4/processor/Incidents(ID={{incident}},IsActiveEntity=false)/ProcessorService.draftActivate
+Authorization: Basic alice:wonderland
+Content-Type: application/json
+
+{}
+
+### 4) Re-run the search — this incident should now rank #1
+GET {{host}}/odata/v4/processor/searchIncidents(phrase='dead%20battery%20pack')
+Authorization: Basic alice:wonderland
