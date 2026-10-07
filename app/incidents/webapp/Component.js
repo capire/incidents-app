@@ -12,9 +12,10 @@ sap.ui.define(
                 Component.prototype.init.apply(this, arguments);
 
                 // Expose optional-feature availability to the UI. Semantic search is an
-                // opt-in overlay (xmpls/embeddings.cds): its searchIncidents function only
-                // appears in the service metadata when the overlay is active. The
-                // "Search by Meaning" toolbar action binds its visibility to this flag.
+                // opt-in overlay (xmpls/embeddings/, activated with `cds watch --profile
+                // embeddings`): its searchIncidents function only appears in the service
+                // metadata when the overlay is active. The "Search by Meaning" toolbar
+                // action binds its visibility to this flag.
                 var oFeatures = new JSONModel({ semanticSearch: false });
                 this.setModel(oFeatures, "features");
                 this.getModel().getMetaModel()

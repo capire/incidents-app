@@ -1,9 +1,10 @@
-using { sap.capire.incidents as my } from '../db/schema';
-using { ProcessorService } from '../srv/processor-service';
+using { sap.capire.incidents as my } from '../../db/schema';
+using { ProcessorService } from '../../srv/processor-service';
 
 // AI overlay: adds local semantic search over incidents (title + conversation),
 // powered by @cap-js/ai's local ONNX embeddings on SQLite. Kept out of the base model
-// so the AI feature is opt-in — activate it via srv/xmpls.cds (see xmpls/README.md).
+// so the AI feature is opt-in — activate it with `cds watch --profile embeddings`
+// (see xmpls/README.md).
 
 extend my.Incidents with {
   // Text to embed (title + all conversation messages), maintained by the handler in embeddings.js.
@@ -24,7 +25,7 @@ extend service ProcessorService with {
 
 // Redirect ProcessorService's implementation to the subclass that adds the AI handlers
 // (it delegates to the base handlers via super.init()).
-annotate ProcessorService with @impl: 'xmpls/embeddings.js';
+annotate ProcessorService with @impl: 'xmpls/embeddings/embeddings.js';
 
 // @cds.api.ignore keeps both out of the OData API.
 annotate my.Incidents:summary with @cds.api.ignore;

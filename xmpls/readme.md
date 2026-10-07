@@ -53,19 +53,33 @@ cp xmpls/data-privacy.cds ./srv
 
 Local similarity search over incidents (title + conversation) via `@cap-js/ai`'s ONNX
 embeddings — runs fully offline on SQLite, no SAP AI Core needed. Install the dependencies,
-then activate by uncommenting the `embeddings` line in `srv/xmpls.cds`:
+then activate the `embeddings` profile:
 
 ```sh
 npm add @cap-js/ai @huggingface/hub@^2.15.0 @huggingface/tokenizers@0.1.3 onnxruntime-node@1.20.1
 ```
 
-```cds
-// srv/xmpls.cds
-using from '../xmpls/embeddings';   // uncomment this line
+```sh
+cds watch --profile embeddings
 ```
 
-The first `cds watch` downloads the embedding model (~90 MB) into `.cds/models`. Then call
+The profile adds the `xmpls/embeddings/` overlay to the model (see the `folders` config in
+`.cdsrc.yaml`); without it the base sample stays AI-free. The first `cds watch --profile
+embeddings` downloads the embedding model (~90 MB) into `.cds/models`. Then call
 `GET /odata/v4/processor/searchIncidents(phrase='inverter problem')`. See `test/embeddings.http`.
+
+### Multilingual model
+
+The `multilingual` profile activates the same overlay but swaps in a multilingual embedding
+model, so queries match incidents across languages (e.g. a German phrase finds English
+incidents):
+
+```sh
+cds watch --profile multilingual
+```
+
+It downloads a larger model (`paraphrase-multilingual-MiniLM-L12-v2`, ~470 MB) on first run.
+`Vector` is declared dimensionless in the overlay, so switching models needs no schema change.
 
 # Other Examples
 

@@ -48,7 +48,7 @@ sap.ui.define([
                 oResults.setProperty("/results", []);
                 MessageBox.error(
                   "Semantic search is not available.\n\n" +
-                  "Activate the embeddings example (uncomment its line in srv/xmpls.cds) and restart.\n\n(" +
+                  "Activate the embeddings example (run `cds watch --profile embeddings`) and reload.\n\n(" +
                   oError.message + ")"
                 );
               })

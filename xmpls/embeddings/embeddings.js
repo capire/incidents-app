@@ -1,5 +1,5 @@
 const cds = require('@sap/cds')
-const { ProcessorService } = require('../srv/processor-service')
+const { ProcessorService } = require('../../srv/processor-service')
 
 // Semantic-search overlay: a subclass of the base ProcessorService, wired in via the
 // `@impl` annotation in embeddings.cds. It adds the AI handlers and keeps the base

@@ -1,0 +1,20 @@
+# Optional-example profiles — activate with `cds watch --profile <name>`.
+# Each profile adds an overlay folder from xmpls/ to the model roots (see xmpls/README.md).
+
+folders:
+  # Semantic search over incidents (@cap-js/ai), using the default English model
+  # (sentence-transformers/all-MiniLM-L6-v2).
+  '[embeddings]':
+    embeddings: xmpls/embeddings/
+  # Same overlay, but with a multilingual model — queries match incidents across languages.
+  '[multilingual]':
+    embeddings: xmpls/embeddings/
+
+requires:
+  db:
+    # The multilingual profile swaps in a larger, multilingual embedding model. The model is
+    # ignored on SAP HANA (which uses the name passed to vector_embedding) and honored by
+    # @cap-js/ai's local ONNX runtime on SQLite.
+    '[multilingual]':
+      embedding:
+        model: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
