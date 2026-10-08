@@ -64,3 +64,18 @@ entity Urgency : CodeList {
 
 type EMailAddress : String;
 type PhoneNumber  : String;
+
+
+// ----------
+
+extend Incidents with {
+  embedding : Vector = vector_embedding(
+    summary,
+    'DOCUMENT', 'SAP_GXY.20250407'
+  ) stored;
+
+  summary : String(2000);
+  summarizedAt : Timestamp;
+
+  // generate solution summary when confirmed
+}

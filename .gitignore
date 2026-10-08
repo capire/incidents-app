@@ -41,3 +41,5 @@ resources/
 
 # VitePress
 _docs/.vitepress/cache
+
+.cds

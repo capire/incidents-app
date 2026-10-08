@@ -86,6 +86,9 @@ annotate service.Incidents with {
   urgency @Common.Label : '{i18n>Urgency}'
 };
 annotate service.Incidents with {
+  summary @Common.Label : '{i18n>Summary}'
+};
+annotate service.Incidents with {
   status @Common.ValueListWithFixedValues : true
 };
 annotate service.Incidents with {
@@ -118,6 +121,10 @@ annotate service.Incidents with @(
       {
         $Type : 'UI.DataField',
         Value : urgency_code,
+      },
+      {
+        $Type : 'UI.DataField',
+        Value : summary,
       },],
   }
 );

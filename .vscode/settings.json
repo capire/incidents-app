@@ -1,8 +1,5 @@
 {
   "files.exclude": {
-    ".*": true,
-    "node_modules": true,
-    "cds-plugin.js": true,
     "LICENSES": true,
     "REUSE*": true
   }
