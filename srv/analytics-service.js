@@ -48,11 +48,9 @@ class AnalyticsService extends cds.ApplicationService {
   async init() {
     this.on('getEmbeddingProjection', async () => {
       const db = await cds.connect.to('db')
-      const rows = await db.run(
-        SELECT.from('sap_capire_incidents_Incidents')
-          .columns('ID', 'title', 'status_code', 'urgency_code', 'summary', 'embedding')
-          .where('embedding is not null')
-      )
+      const rows = await SELECT.from('Incidents')
+          .columns `ID, title, status_code, urgency.code, summary, embedding`
+          .where `embedding is not null`
       if (!rows.length) return []
 
       const vectors = rows.map(r => JSON.parse(r.embedding))

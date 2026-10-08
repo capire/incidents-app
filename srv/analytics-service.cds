@@ -1,7 +1,4 @@
-using { sap.capire.incidents as my } from '../db/schema';
-
 service AnalyticsService {
-
   type EmbeddingPoint {
     ID         : UUID;
     title      : String;
