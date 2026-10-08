@@ -2,6 +2,7 @@
   "name": "@capire/incidents",
   "version": "1.0.0",
   "dependencies": {
+    "@cap-js/hana": "^3",
     "@sap-ai-sdk/orchestration": "^2.16.0",
     "@sap/cds": ">=9"
   },

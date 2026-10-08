@@ -51,6 +51,7 @@ class AnalyticsService extends cds.ApplicationService {
       const rows = await SELECT.from('Incidents')
           .columns `ID, title, status_code, urgency.code, summary, embedding`
           .where `embedding is not null`
+          .orderBy `ID`
       if (!rows.length) return []
 
       const vectors = rows.map(r => JSON.parse(r.embedding))

@@ -144,6 +144,7 @@ export default function App() {
       padding: '24px 24px 48px',
       color: textPri,
     }}>
+      <div style={{ maxWidth: 960, margin: '0 auto' }}>
       <header style={{ marginBottom: 24 }}>
         <h1 style={{ margin: 0, fontSize: 20, fontWeight: 600, color: textPri }}>
           Incident Embedding Clusters
@@ -414,6 +415,7 @@ export default function App() {
           </details>
         )
       })()}
+      </div>
     </div>
   )
 }
