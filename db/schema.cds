@@ -77,5 +77,15 @@ extend Incidents with {
   summary : String(2000);
   summarizedAt : Timestamp;
 
+
+  similar: Association to many SimilarIncidents on similar.self = ID and similar.score > 0.2;
+
   // generate solution summary when confirmed
+}
+
+view SimilarIncidents as select from Incidents as i1 join Incidents as i2 on i1.ID != i2.ID {
+  i1.ID as self,
+  i2.ID as ID,
+  i2.title as title,
+  cosine_similarity(i1.embedding, i2.embedding) as score : Decimal(7,6),
 }

@@ -13,7 +13,7 @@ const orchestrationClient = new OrchestrationClient({
 class ProcessorService extends cds.ApplicationService {
   async init() {
 
-    const { Incidents } = this.entities
+    const { Incidents, SimilarIncidents } = this.entities
 
     this.before ('UPDATE', Incidents, async req => {
       let closed = await SELECT.one(1) .from (req.subject) .where `status.code = 'C'`
@@ -23,6 +23,22 @@ class ProcessorService extends cds.ApplicationService {
     this.before (['CREATE','UPDATE'], Incidents, req => {
       let urgent = req.data.title?.match(/urgent/i)
       if (urgent) req.data.urgency_code = 'H'
+    })
+    this.before('READ', Incidents, req => {
+      const cols = req.query.SELECT?.columns
+      if (!cols) return
+
+      const similarCol = cols.find(c => c?.ref?.[0] === 'similar')
+      if (!similarCol) return
+
+      // Inject orderBy and limit into the expand inline
+      similarCol.orderBy = [{ ref: ['score'], sort: 'desc' }]
+      similarCol.limit = { rows: { val: 2 } }
+    })
+
+    this.before('READ', SimilarIncidents, req => {
+      req.query.SELECT.limit = { rows: { val: 2 } }
+      req.query.SELECT.orderBy = [{ ref: ['score'], sort: 'desc' }]
     })
 
     this.summarize()

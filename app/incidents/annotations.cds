@@ -71,6 +71,12 @@ annotate service.Incidents with @(
       ID : 'i18nConversation',
       Target : 'conversation/@UI.LineItem#i18nConversation1',
     },
+    {
+      $Type : 'UI.ReferenceFacet',
+      Label : 'Similar Incidents',
+      ID : 'SimilarIncidents',
+      Target : 'similar/@UI.LineItem',
+    },
   ]
 );
 annotate service.Incidents with @(
@@ -186,4 +192,26 @@ annotate service.Incidents.conversation with @(
       Value : message,
       Label : '{i18n>Message}',
     },]
+);
+
+annotate service.SimilarIncidents with @(
+  UI.LineItem : [
+    {
+      $Type : 'UI.DataField',
+      Value : ID,
+      Label : 'ID',
+      ![@HTML5.CssDefaults] : { width: '20rem' },
+    },
+    {
+      $Type : 'UI.DataField',
+      Value : title,
+      Label : 'Incident Title',
+    },
+    {
+      $Type : 'UI.DataField',
+      Value : score,
+      Label : 'Score',
+      ![@HTML5.CssDefaults] : { width: '6rem' },
+    },
+  ]
 );
