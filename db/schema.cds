@@ -78,14 +78,18 @@ extend Incidents with {
   summarizedAt : Timestamp;
 
 
-  similar: Association to many SimilarIncidents on similar.self = ID and similar.score > 0.2;
+  similar: Association to many SimilarIncidents on similar.self = $self;
 
   // generate solution summary when confirmed
 }
 
-view SimilarIncidents as select from Incidents as i1 join Incidents as i2 on i1.ID != i2.ID {
-  i1.ID as self,
-  i2.ID as ID,
-  i2.title as title,
-  cosine_similarity(i1.embedding, i2.embedding) as score : Decimal(7,6),
+view SimilarIncidents as select from Incidents as self join Incidents as incident on self.ID != incident.ID {
+  self.ID as self_ID,
+  self : Association to Incidents on self_ID = self.ID, // optional
+
+  incident.ID as ID,
+  incident.title as title,
+  incident : Association to Incidents on ID = incident.ID, // optional
+
+  cosine_similarity(self.embedding, incident.embedding) as score : Decimal(7,6),
 }

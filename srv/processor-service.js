@@ -41,43 +41,40 @@ class ProcessorService extends cds.ApplicationService {
       req.query.SELECT.orderBy = [{ ref: ['score'], sort: 'desc' }]
     })
 
-    this.summarize()
     await this.schedule('summarize').every('10s')
-    this.on('summarize', () => this.summarize())
+    this.on('summarize', async () => {
+      const incidents = await SELECT.from(Incidents)
+        .columns `ID, title, modifiedAt, conversation { message }`
+        .where `summarizedAt is null or modifiedAt > summarizedAt`
+        .limit(10)
+      console.log('summarize', incidents.length, 'incidents')
+
+      for (const incident of incidents) {
+        const { ID, title, conversation, modifiedAt } = incident
+        const prompt = `
+          Summarize the ticket briefly with a maximum of 2 sentences.
+          Focus on the problem the customer faces.
+        `
+        const content = `
+          Title: ${title}
+          Messages: ${conversation.map(c => `${c.timestamp} - ${c.message}`).join('\n----\n')}
+        `
+        const response = await orchestrationClient.chatCompletion({
+          messages: [
+            { role: 'system', content: prompt },
+            { role: 'user', content }
+          ]
+        });
+        const summary = response.getContent()
+
+        await UPDATE(Incidents, ID).with({ summarizedAt: modifiedAt, modifiedAt, summary })
+        console.log('peristed summary:', summary)
+      }
+    })
 
     return super.init()
   }
 
-  async summarize() {
-    const { Incidents } = this.entities
-    const incidents = await SELECT.from(Incidents)
-      .columns `ID, title, modifiedAt, conversation { message }`
-      .where `summarizedAt is null or modifiedAt > summarizedAt`
-      .limit(10)
-    console.log('summarize', incidents.length, 'incidents')
-
-    for (const incident of incidents) {
-      const { ID, title, conversation, modifiedAt } = incident
-      const prompt = `
-        Summarize the ticket briefly with a maximum of 2 sentences.
-        Focus on the problem the customer faces.
-      `
-      const content = `
-        Title: ${title}
-        Messages: ${conversation.map(c => `${c.timestamp} - ${c.message}`).join('\n----\n')}
-      `
-      const response = await orchestrationClient.chatCompletion({
-        messages: [
-          { role: 'system', content: prompt },
-          { role: 'user', content }
-        ]
-      });
-      const summary = response.getContent()
-
-      await UPDATE(Incidents, ID).with({ summarizedAt: modifiedAt, modifiedAt, summary })
-      console.log('peristed summary:', summary)
-    }
-  }
 }
 
 module.exports = { ProcessorService }
