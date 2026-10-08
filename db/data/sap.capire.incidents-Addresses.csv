@@ -1,4 +1,3 @@
-ID,customer_ID,city,postCode,streetAddress
-17e00347-dc7e-4ca9-9c5d-06ccef69f064,1004155,Rome,00164,Piazza Adriana
-d8e797d9-6507-4aaa-b43f-5d2301df5135,1004161,Munich,80809,Olympia Park
-ff13d2fa-e00f-4ee5-951c-3303f490777b,1004100,Walldorf,69190,Dietmar-Hopp-Allee
+ID,customer_ID,city,postCode,streetAddress,createdAt,createdBy,modifiedAt,modifiedBy
+20293830-7bee-4663-86b9-d10c697c8610,Customers-96100,London,SW1A 1AA,10 Downing Street,2024-01-15T08:00:00Z,admin,2024-01-15T08:00:00Z,admin
+20293831-8ca7-4678-8030-8817cc84bec1,Customers-96101,Munich,80809,Olympiapark 1,2024-01-20T09:00:00Z,admin,2024-01-20T09:00:00Z,admin

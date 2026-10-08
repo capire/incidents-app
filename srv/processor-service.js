@@ -9,6 +9,7 @@ const orchestrationClient = new OrchestrationClient({
   }
 });
 
+const LOG = cds.log('processor')
 
 class ProcessorService extends cds.ApplicationService {
   async init() {
@@ -44,13 +45,13 @@ class ProcessorService extends cds.ApplicationService {
     await this.schedule('summarize').every('10s')
     this.on('summarize', async () => {
       const incidents = await SELECT.from(Incidents)
-        .columns `ID, title, modifiedAt, conversation { message }`
+        .columns `ID, title, modifiedAt, createdAt, conversation { message }`
         .where `summarizedAt is null or modifiedAt > summarizedAt`
         .limit(10)
-      console.log('summarize', incidents.length, 'incidents')
+      LOG.debug('summarize', incidents.length, 'incidents')
 
       for (const incident of incidents) {
-        const { ID, title, conversation, modifiedAt } = incident
+        const { ID, title, conversation, modifiedAt, createdAt } = incident
         const prompt = `
           Summarize the ticket briefly with a maximum of 2 sentences.
           Focus on the problem the customer faces.
@@ -67,8 +68,8 @@ class ProcessorService extends cds.ApplicationService {
         });
         const summary = response.getContent()
 
-        await UPDATE(Incidents, ID).with({ summarizedAt: modifiedAt, modifiedAt, summary })
-        console.log('peristed summary:', summary)
+        await UPDATE(Incidents, ID).with({ summarizedAt: modifiedAt || createdAt, modifiedAt, summary })
+        LOG.debug('peristed summary:', summary)
       }
     })
 
