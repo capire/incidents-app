@@ -1,0 +1,28 @@
+:root {
+  --text: #111;
+  --text-muted: #777;
+  --bg: #fff;
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--sans);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #fff;
+    --text-muted: #a3a3a3;
+    --bg: #16171d;
+  }
+}
+
+body {
+  color: var(--text);
+  background: var(--bg);
+}
+
+.title {
+  color: var(--text);
+}
+
+.author {
+  color: var(--text-muted);
+}
